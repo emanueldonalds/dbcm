@@ -10,11 +10,13 @@ import (
 )
 
 var configName = "config"
-var extensions = []string{"yaml", "yml", "toml", "json"}
 var configDirPaths = []string{
-	os.ExpandEnv("$HOME/.config/dbcm"),
-	"./configs",
 	".",
+	"./configs",
+	os.ExpandEnv("$XGD_CONFIG_HOME/dbcm"),
+	os.ExpandEnv("$HOME/.config/dbcm"),
+	os.ExpandEnv("$HOME/.dbcm"),
+	os.ExpandEnv("/etc/dbcm"),
 }
 
 type Config struct {
