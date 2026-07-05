@@ -5,8 +5,9 @@ import (
 	"os"
 
 	"github.com/emanueldonalds/dbcm/internal/config"
+	"github.com/emanueldonalds/dbcm/internal/runner"
+	"github.com/emanueldonalds/dbcm/internal/deps"
 )
-
 
 func main() {
 	fmt.Printf("  _//_ _  _ _\n")
@@ -20,12 +21,20 @@ func main() {
 }
 
 func run() error {
-	loader := config.NewLoader()
-	cfg, err := loader.Load()
-	if err != nil {
-		return fmt.Errorf("could not load config: %w", err)
+	if err := deps.Check(); err != nil {
+		return fmt.Errorf("%w", err)
 	}
 
-	fmt.Printf("Loaded %d connections\n", len(cfg.Connections))
+	l := config.NewLoader()
+	cfg, err := l.Load()
+	if err != nil {
+		return fmt.Errorf("config: %w", err)
+	}
+
+	r := runner.NewRunner(cfg)
+	if err := r.Run(); err != nil {
+		return fmt.Errorf("runner: %w", err)
+	}
+
 	return nil
 }
